@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import ts from 'typescript';
+import assert from 'node:assert/strict';
+const js=ts.transpileModule(fs.readFileSync('src/search.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const {normalizeSearch:n}=await import('data:text/javascript;base64,'+Buffer.from(js).toString('base64'));
+assert.equal(n('إِدْلِب'),n('ادلب'));
+assert.equal(n('أَطْلَس'),n('اطلس'));
+assert.equal(n('الـعـنـايـة'),n('العناية'));
+assert.equal(n('  ALEPPO  '),n('aleppo'));
+assert.equal(n('الحسكة'),n('الحسكة'));
+assert(n('المشفى العسكري التجريبي — دمشق').includes(n('دِمَشْق')));
+assert(!n('حلب').includes(n('حمص')));
+assert.equal(n('   '),'');
+console.log('PASS: Arabic search handles hamza, diacritics, tatweel, whitespace, case and partial matches without changing unrelated names.');
