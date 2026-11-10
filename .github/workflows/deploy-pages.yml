@@ -29,6 +29,8 @@ jobs:
         run: npm run check:data
       - name: Check Arabic search
         run: npm run check:search
+      - name: Check hospital records
+        run: npm run check:hospitals
       - name: Build
         run: npm run build
       - name: Upload Pages artifact
